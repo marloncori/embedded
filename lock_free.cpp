@@ -27,7 +27,7 @@
       }
       
       void Push(int data){
-         Node* new_node = new Node(data, static_cast<Node>(nullptr));
+         Node* new_node = new Node{data, nullptr};
          new_node->next = head.load();
          while(!std::atomic_compare_exchange_weak(
              &head,
