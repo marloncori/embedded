@@ -40,13 +40,13 @@
    Stack s;
    
    std::cout << "\033[1;34m\nPushing a value into the Stack...\033[0m" << std::endl;
-   std::this_tread::sleep_for(std::chrono::seconds(1));
+   std::this_thread::sleep_for(std::chrono::seconds(1));
    s.Push(1);
    
    std::cout << "\033[1;35m\nPushing a value into the Stack...\033[0m" << std::endl;
-   std::this_tread::sleep_for(std::chrono::seconds(1));
+   std::this_thread::sleep_for(std::chrono::seconds(1));
    s.Push(7);
    
-   std::cout << \033[1;36m"....Program has ended....\033[0m" << std::endl;
+   std::cout << "\033[1;36m....Program has ended....\033[0m" << std::endl;
    return 0;
  } 
