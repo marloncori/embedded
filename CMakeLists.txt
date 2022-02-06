@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.55.1)
+cmake_minimum_required(VERSION 3.5.1)
 project(atomic_variable)
 
 add_executable(atomic ${PROJECT_NAME}.cpp)
