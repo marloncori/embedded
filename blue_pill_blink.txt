@@ -1,0 +1,70 @@
+/*
+ * gpios_config.c
+ *
+ *  Created on: 2022. szept. 16.
+ *      Author: Marlon Couto Ribeiro
+ */
+#include "stm32f10x.h"
+
+/************************************************************************************/
+/*   GENERAL DEFINITIONS */
+/************************************************************************************/
+
+#define      HIGH   1
+#define   SET_PIN   13
+#define RESET_PIN  (SET_PIN + 14)
+
+/************************************************************************************/
+/*   FUNCTION DECLARATIONS */
+/************************************************************************************/
+
+void config_portc_clock(void);
+void config_gpio3_50mhz(void);
+void gpio3_output_mode(void);
+void toggle_gpio_state(void);
+
+/************************************************************************************/
+/*   GLOBAL VARIABLES */
+/************************************************************************************/
+
+uint8_t running = 1;
+
+/************************************************************************************/
+/*   START OF ROUTINE */
+/************************************************************************************/
+int main(void){
+
+	config_portc_clock();
+	config_gpio3_50mhz();
+	gpio3_output_mode();
+
+	do {
+		toggle_gpio_state();
+	} while(running);
+}
+
+/************************************************************************************/
+/*   END OF PROGRAM */
+/************************************************************************************/
+
+void config_portc_clock(void){
+	 RCC->APB2ENR |= (1 << 4);
+}
+
+void config_gpio3_50mhz(void){
+	GPIOC->CRH |= (1 << 20) | (1 << 21);
+}
+
+void gpio3_output_mode(void){
+	GPIOC->CRH = (1 << 22) | (1 << 23);
+}
+
+void toggle_gpio_state(void){
+	int i = 0; //BAD FOR LOOP, IT IS BETTER TO USER BOARD TIMERS FOR TOGGLING PINS
+	for(i=0; i<=5000000; ++i){
+	    GPIOC->BSRR = (HIGH << SET_PIN);
+	}
+	for(i=0; i<=5000000; ++i){
+	    GPIOC->BSRR = (HIGH << RESET_PIN);
+	}
+}

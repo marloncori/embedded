@@ -1,0 +1,49 @@
+If I need to build the libopencm3 again:
+- open MSYS
+$> cd C:/Users/NUC/Desktop/STM32Nucleo/stm32f10*
+
+Go to:
+$> cd libopencm3
+
+From there write:
+$> export PATH=/c//Python310:/c/Program Files (x86)/bin:/usr/local/bin:/usr/bin:bin
+(if there is any problem, check where the python.exe
+  is called python3.exe. Rename it accordingly if needed)
+
+And then:
+$> export PATH="C:\\Program Files (x86)\\bin:$PATH"
+
+And then check if the cross compiler has been deteceted:
+$> arm-none-eabi-gcc --version
+  or
+  type arm-none-eabi-gcc
+
+To start a new project type:
+$> cd ./rtos
+$> make -f Project.mk PROJECT=<name>
+$> cd ./<name>
+
+Tweak and build it like:
+ $> make -w -C <name>
+
+Buy issuing 
+$> make flash
+
+If i have not properly set the openocd folder it should
+be done like this
+$> ./bootstrap
+$> ./configure
+$> make
+$> sudo make install
+
+I could flash the .elf file if the st-flash program is
+installed. I can just copy the .elf file to the
+ bin folder in the openOCD folder on the Desktop
+
+and from there I can issue this command to flash the
+program onto the stm32 memory (it has to be plugged to 
+NUC with the st-link v.2 before that!)
+$> openocd -f /board/chinese_bluepill.cfg -c init -c targets -c "halt" -c "flash write_image erase main.elf" -c "verify_image main.elf" -c "reset run" -c "shutdown"
+$> openocd -f /board/stm32f4x.cfg -c init -c targets -c "halt" -c "flash write_image erase main.elf" -c "verify_image main.elf" -c "reset run" -c "shutdown"
+
+$> openocd -f interface/stlink-v2-1.cfg -f target/stm32l0_dual_bank.cfg -c init -c targets -c "halt" -c "flash write_image erase stm32l073rz_asm_blink.elf" -c "verify_image stm32l073rz_asm_blink.elf" -c "reset run" -c "shutdown"
