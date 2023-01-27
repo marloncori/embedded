@@ -1,0 +1,51 @@
+
+//stm32l073rz clock config
+
+#define RCC_CR_HSE_ON          (1<<16)
+#define RCC_CR_HSE_RDY         (1<<17)
+#define RCC_APB1ENR_PWR_EN     (1<<28)
+#define PWR_CR_VOS_RNG1        (0<<12)|(1<<11)
+#define FLASH_ACR_LATENCY_1WS    (1<<0 ) 
+#define RCC_CFGR_AHB_PRE_DIV     (1<<4 )
+#define RCC_CFGR_APB1_PRE_DIV4   (5<<8 ) /* <8:9:10> 101 */
+#define RCC_CFGR_APB2_PRE_DIV2   (4<<8 ) /* <11:12:13> 100 */
+#define RCC_CFGR_PLLMUL_BY3      (1<<18)
+#define RCC_CFGR_PLLSRC_HSE      (1<<16)
+#define RCC_CR_PLL_ON            (1<<24)
+#define RCC_CR_PLL_RDY           (1<<25)
+#define RCC_CFGR_SW_PLL          (3<<0 )
+#define RCC_CFGR_STATUS_PLL      (3<<2 )
+
+void SysClkConfig(){
+
+  /*enable high speed external crystal and wait
+   for the HSE to become ready */
+  RCC->CR |= RCC_CR_HSE_ON;  
+  while (!(RCC->CR & (RCC_CR_HSE_RDY)));
+
+  /* SET THE POWER ENABLE CLOCK*/	
+  RCC->APB1ENR |= RCC_APB1ENR_PWR_EN;
+
+  /* Internal regulator voltage range 1.8 v*/
+  PWR->CR |= PWR_CR_VOS_RNG1;
+
+  FLASH->ACR |= FLASH_ACR_LATENCY_1WS;
+
+  RCC->CFGR &= ~RCC_CFGR_HPRE_DIV;
+  RCC->CFGR |= RCC_CFGR_APB1_PRE_DIV4;
+  RCC->CFGR |= RCC_CFGR_APB2_PRE_DIV2;
+
+  /* Configure main PLL */
+  RCC->CFGR &= ~RCC_CFGR_PLLMUL_BY3; 
+  RCC->CFGR |= RCC_CFGR_PLLSRC_HSE;
+  
+  RCC->CR |= RCC_CR_PLL_ON;
+  while(!(RCC->CR & RCC_CR_PLL_RDY));
+
+  RCC->CFGR |= RCC_CFGR_SW_PLL;
+  while(!(RCC->CFGR & RCC_CFGR_STATUS_PLL));
+
+  /* 180 MHz? */
+}
+
+
